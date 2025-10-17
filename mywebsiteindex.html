@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harvest Time Suggester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        #suggestion {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Harvest Time Suggester</h1>
+    <p>This simple tool helps suggest the optimal harvesting time for your crops based on maturity, current weather conditions, and market prices. Note: This uses placeholder logic and data. In a real application, integrate APIs for weather (e.g., OpenWeatherMap) and market prices (e.g., agricultural data sources).</p>
+    
+    <form id="harvestForm">
+        <label for="crop">Crop Type (e.g., Tomato):</label>
+        <input type="text" id="crop" name="crop" required>
+        
+        <label for="location">Location (e.g., City, Country):</label>
+        <input type="text" id="location" name="location" required>
+        
+        <label for="planting_date">Planting Date:</label>
+        <input type="date" id="planting_date" name="planting_date" required>
+        
+        <button type="button" onclick="suggestHarvest()">Get Suggestion</button>
+    </form>
+    
+    <div id="suggestion"></div>
+    
+    <script>
+        function suggestHarvest() {
+            const crop = document.getElementById('crop').value;
+            const location = document.getElementById('location').value;
+            const plantingDate = new Date(document.getElementById('planting_date').value);
+            const today = new Date();
+            
+            // Calculate days since planting
+            const daysSincePlanting = Math.floor((today - plantingDate) / (1000 * 60 * 60 * 24));
+            
+            // Placeholder maturity days (vary by crop in real scenarios)
+            let maturityDays = 60; // e.g., for tomatoes
+            if (crop.toLowerCase().includes('wheat')) maturityDays = 120;
+            if (crop.toLowerCase().includes('corn')) maturityDays = 90;
+            
+            let suggestionText = '';
+            
+            // Check maturity
+            if (daysSincePlanting < maturityDays) {
+                suggestionText += 'Crop is not yet mature. Wait ' + (maturityDays - daysSincePlanting) + ' more days.<br>';
+            } else {
+                suggestionText += 'Crop is mature.<br>';
+                
+                // Placeholder weather check (in real app, fetch from API)
+                const weatherGood = Math.random() > 0.3; // Simulate 70% chance good weather
+                suggestionText += weatherGood ? 'Weather in ' + location + ' looks favorable (dry and mild).<br>' : 'Weather in ' + location + ' may not be ideal (rain expected).<br>';
+                
+                // Placeholder market price check (in real app, fetch from API)
+                const priceHigh = Math.random() > 0.5; // Simulate 50% chance high price
+                suggestionText += priceHigh ? 'Market prices are high – good time to sell.<br>' : 'Market prices are average – consider waiting.<br>';
+            }
+            
+            // Overall suggestion
+            if (daysSincePlanting >= maturityDays && suggestionText.includes('favorable') && suggestionText.includes('high')) {
+                suggestionText += '<strong>Recommendation: Harvest now!</strong>';
+            } else if (daysSincePlanting >= maturityDays) {
+                suggestionText += '<strong>Recommendation: Harvest soon, but monitor conditions.</strong>';
+            } else {
+                suggestionText += '<strong>Recommendation: Do not harvest yet.</strong>';
+            }
+            
+            document.getElementById('suggestion').innerHTML = suggestionText;
+        }
+    </script>
+</body>
+</html>
